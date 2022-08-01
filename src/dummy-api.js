@@ -6,7 +6,7 @@ const path = require('path');
 const hash = require('object-hash');
 const { toSQL, toSQLUpdates } = require('json-schema2sql');
 const sequelize = require('json-schema2sequelize');
-
+const sift = require('sift').default;
 const DummyEndpoint = require('./dummy-endpoint');
 
 const writeInto = (ob, values)=>{
@@ -18,6 +18,7 @@ const writeInto = (ob, values)=>{
 
 const DummyAPI = function(dir, format, options){
     this.readyResolve = null;
+    this.sift = sift;
     this.ready = new Promise((resolve, rjct)=>{
         this.readyResolve = resolve;
     });
