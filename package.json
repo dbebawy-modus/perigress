@@ -1,0 +1,61 @@
+{
+  "name": "@perigress/perigress",
+  "version": "0.1.0",
+  "main": "perigress.js",
+  "description": "Contract testing + Data Generation",
+  "keywords": [
+    "contract",
+    "testing",
+    "data",
+    "mock",
+    "mocks",
+    "fake",
+    "data",
+    "generation"
+  ],
+  "author": "Abbey Hawk Sparrow <@khrome> (http://patternweaver.com)",
+  "contributors": [],
+  "bugs": {
+    "url": "https://github.com/perigress/perigress/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/perigress/perigress.git"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "joi": "^17.6.0",
+    "mocha": "^9.2.1",
+    "postman-request": "^2.88.1-postman.31"
+  },
+  "bin": {
+    "peri": "./bin/peri"
+  },
+  "scripts": {
+    "sample-sequelize-create": "./bin/peri generate-tables ./test/paged-wkr-api --sequelize ../sequelize",
+    "sample-sql-create": "./bin/peri generate-tables ./test/paged-wkr-api --sql",
+    "sample-sql-serve": "./bin/peri serve ./test/paged-wkr-api"
+  },
+  "dependencies": {
+    "app-term-kit": "^0.4.2",
+    "async-arrays": "^1.0.1",
+    "body-parser": "^1.19.2",
+    "es6-template-strings": "^2.0.1",
+    "express": "^4.17.3",
+    "extend-interface": "0.0.2",
+    "joi-to-json": "^2.2.0",
+    "json-schema-faker": "^0.5.0-rcv.42",
+    "json-schema2sequelize": "0.0.2",
+    "json-schema2sql": "0.0.3",
+    "jsonschema": "^1.4.0",
+    "kitchen-sync": "0.0.1",
+    "object-accessor": "0.0.1",
+    "object-hash": "^3.0.0",
+    "seed-random": "^2.2.0",
+    "sift": "^16.0.0",
+    "to-json-schema": "^0.2.5",
+    "tree-pop": "0.0.5",
+    "well-known-regex": "0.0.7"
+  }
+}
