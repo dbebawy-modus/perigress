@@ -46,14 +46,20 @@ DummyAPI.prototype.getInstance = function(name){
 
 DummyAPI.prototype.internal = function(name, operation, options, cb){
     let callback = ks(cb);
+    let parentStack = (new Error()).stack
     this.ready.then(()=>{
         try{
             let endpoint = this.endpoints.find((e)=>{
                 return e.options.name === name
             });
             if(!endpoint) throw new Error('endpoint not found');
-            if(!endpoint[operation]) throw new Error('operation not found');
-            endpoint[operation](options, (err, res)=>{
+            let op = (
+                endpoint.outputFormat && endpoint.outputFormat[operation]
+            ) || (
+                endpoint[operation]
+            );
+            if(!op) throw new Error('operation not found('+operation+' , '+endpoint.options.name+') '+parentStack);
+            op(options, (err, res)=>{
                 return callback(err, res);
             });
         }catch(ex){
@@ -91,79 +97,20 @@ const returnError = (res, error, errorConfig, config)=>{
 
 DummyAPI.prototype.attach = function(instance, cb){
     this.ready.then(()=>{
-        try{
-            let firstEndpoint = this.endpoints[0];
-            this.endpoints.forEach((endpoint)=>{
-                endpoint.attach(instance);
-            });
-            if(instance){
-                instance.get('/openapi.json', (req, res)=>{
-                    let org = {
-                        'list': '', 
-                        'display': '', 
-                        'create': '', 
-                        'edit': ''
-                    }
-                    let serverList = [];
-                    let pathReferenceDirectory = {};
-                    this.endpoints.forEach((endpoint)=>{
-                        org = {
-                            'list': endpoint.urls.list, 
-                            'display': endpoint.urls.display.replace(':id', '{id}'), 
-                            'create': endpoint.urls.create, 
-                            'edit': endpoint.urls.edit.replace(':id', '{id}')
-                        }
-                        Object.keys(org).forEach((key)=>{
-                            pathReferenceDirectory[org[key]] = {$ref: endpoint.basePath+'/'+key+'-schema.json'};
-                        });
-                        //console.log(endpoint); 
-                    });
-                    res.send(JSON.stringify({
-                        openapi: '3.0.0',
-                        servers: serverList,
-                        paths: pathReferenceDirectory
-                    }));
-                });
-                let port = process.env.PERIGRESS_OPENAPI_PORT || 8080;
-                let host = process.env.PERIGRESS_OPENAPI_HOST || 'localhost';
-                let protocol = process.env.PERIGRESS_OPENAPI_PROTOCOL || 'http';
-                let staticSwaggerHost = process.env.PERIGRESS_OPENAPI_STATIC_HOST || 'unpkg.com/swagger-ui-dist@4.5.0';
-                instance.get('/spec', (req, res)=>{
-                    res.send(`<!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                      <meta charset="utf-8" />
-                      <meta name="viewport" content="width=device-width, initial-scale=1" />
-                      <meta
-                        name="description"
-                        content="SwaggerUI"
-                      />
-                      <title>SwaggerUI</title>
-                      <link rel="stylesheet" href="${protocol}://${staticSwaggerHost}/swagger-ui.css" />
-                    </head>
-                    <body>
-                    <div id="swagger-ui"></div>
-                    <script src="${protocol}://${staticSwaggerHost}/swagger-ui-bundle.js" crossorigin></script>
-                    <script>
-                      window.onload = () => {
-                        window.ui = SwaggerUIBundle({
-                          url: '${protocol}://${host}:${port}/openapi.json',
-                          deepLinking: true,
-                          dom_id: '#swagger-ui',
-                        });
-                      };
-                    </script>
-                    </body>
-                    </html>`);
-                });
-                instance.all('*', (req, res)=>{
-                    returnError(res, new Error('Path not found.'), firstEndpoint.errorSpec(), firstEndpoint.config())
-                });
-            }
+        let resolve = null;
+        let reject = null;
+        this.ready = this.ready.then(new Promise((res, rjct)=>{
+            resolve = res;
+            reject = rjct;
+        }))
+        arrays.forEachEmission(this.endpoints, (endpoint, index, done)=>{
+            this.outputFormat.attach(instance, endpoint, this);
+            done();
+        }, ()=>{
+            this.outputFormat.attach(instance, null, this);
+            resolve()
             if(cb) cb();
-        }catch(ex){
-            console.log('ERROR', ex);
-        }
+        });
     });
 };
 

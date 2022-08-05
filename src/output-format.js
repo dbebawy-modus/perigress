@@ -24,39 +24,56 @@ let OutputFormat = function(opts){
 OutputFormat.prototype.mutateEndpoint = function(endpoint){
 	throw new Error('mutateEndpoint() not implemented.')
 };
-OutputFormat.prototype.attach = function(expressInstance, endpoint){
+OutputFormat.prototype.attach = function(expressInstance, endpoint, api){
 	if(!endpoint){
-		
+		this.attachRoot(expressInstance, api)
 	}else{
-		let options = endpoint.options;
-		let prefix = options.path.substring(
-			path.join(options.root, options.subpath).length
-		);
-		let urlPath = prefix+'/'+options.spec.split('.').shift();
-		//let ob = this;
-		let config = endpoint.config();
-		let errorConfig = endpoint.errorSpec();
-		let primaryKey = config.primaryKey || 'id';
-		
-		let pathOptions = {
-			basePath : urlPath,
-			primaryKey : primaryKey
+		try{
+			let options = endpoint.options;
+			let prefix = options.path.substring(
+				path.join(options.root, options.subpath).length
+			);
+			let urlPath = prefix+'/'+options.spec.split('.').shift();
+			//let ob = this;
+			let config = endpoint.config();
+			let errorConfig = endpoint.errorSpec();
+			let primaryKey = config.primaryKey || 'id';
+			
+			let pathOptions = {
+				basePath : urlPath,
+				primaryKey : primaryKey
+			}
+			this.basePath = urlPath;
+			endpoint.basePath = urlPath;
+			this.mutateEndpoint(endpoint);
+			let resultSpec = endpoint.resultSpec();
+			let cleaned = endpoint.cleanedSchema(resultSpec.returnSpec || {});
+			let readOnly = config.readOnlyFields || ['id'];
+			if(expressInstance) this.attachEndpointSpec(expressInstance, endpoint, {
+				prefix, 
+				urlPath, 
+				config, 
+				errorConfig, 
+				primaryKey,
+				resultSpec,
+				cleaned,
+				readOnly,
+				pathOptions
+			});
+			if(expressInstance) this.attachEndpoint(expressInstance, endpoint, {
+				prefix, 
+				urlPath, 
+				config, 
+				errorConfig, 
+				primaryKey,
+				resultSpec,
+				cleaned,
+				readOnly,
+				pathOptions
+			});
+		}catch(ex){
+			console.log('%%', ex)
 		}
-		this.basePath = urlPath;
-		let resultSpec = endpoint.resultSpec();
-		let cleaned = endpoint.cleanedSchema(resultSpec.returnSpec || {});
-		let readOnly = config.readOnlyFields || ['id'];
-		this.attachEndpoint(expressInstance, endpoint, {
-			prefix, 
-			urlPath, 
-			config, 
-			errorConfig, 
-			primaryKey,
-			resultSpec,
-			cleaned,
-			readOnly,
-			pathOptions
-		});
 	}
 };
 OutputFormat.prototype.attachEndpoint = function(expressInstance, endpoint){

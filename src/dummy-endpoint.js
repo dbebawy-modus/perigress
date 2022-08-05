@@ -343,9 +343,12 @@ const save = (ob, identifier, type, item, cb)=>{
 };
 
 DummyEndpoint.prototype.attach = function(expressInstance){
-    if(!this.api.outputFormat) throw new Error('no output format');
-    this.api.outputFormat.mutateEndpoint(this);
-    if(expressInstance) this.api.outputFormat.attach(expressInstance, this);
+    try{
+        if(!this.api.outputFormat) throw new Error('no output format');
+        if(!expressInstance) throw new Error('no express instance');
+        this.api.outputFormat.attach(expressInstance, this);
+    }catch(ex){
+    }
 }
 
 DummyEndpoint.prototype.config = function(){
