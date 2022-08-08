@@ -3,7 +3,7 @@ Perigress
 
 A medium for contract based development.
 
-Data maintenance, contract testing and data generation without boilerplate using a series of either [joi validators](https://joi.dev/api/)(.spec.js), [JSON Schema](https://json-schema.org/)(.spec.schema.js), or example [JSON](https://json.org/example.html)(.spec.json) files to represent the structure of the API URLs(which you are probably **already** writing). This started as [an experiment](https://github.com/khrome/joinerator) with [joi](https://joi.dev/) to see if it were possible to generate a reasonable, [coherent + consistent](https://github.com/khrome/perigress/blob/master/docs/coherent-consistent.md) data, but then I realized using [json-schema](https://json-schema.org/) could support joi **and** many other features and pipelines.
+Data maintenance, contract testing and data generation without boilerplate using a series of either [joi validators](https://joi.dev/api/)(.spec.js), [JSON Schema](https://json-schema.org/)(.spec.schema.js), or example [JSON](https://json.org/example.html)(.spec.json) files to represent the structure of the API URLs(which you are probably **already** writing).
 
 The ultimate goal of this library is to generate fully functional and tested backends, mocks, seeds and migrations from nothing more than a set of schema.
 
@@ -96,8 +96,8 @@ Roadmap
 - [x] - external express instances in mock
 - [x] - pluggable transports
 - [x] - Mongoish output format
-- [ ] - expose sift for extension
-- [ ] - passable page config
+- [x] - expose sift for extension
+- [x] - passable page config
 - [ ] - validator assembly
 - [ ] - db test suites
 - [ ] - better error handling

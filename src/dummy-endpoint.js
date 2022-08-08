@@ -85,6 +85,7 @@ const DummyEndpoint = function(options, api){
     if(!this.options.expandable){
         if(!conf.expandable){
             // use the default
+            let fk = this.options.foreignKey || conf.foreignKey;
             let keyPartJoiner = conf.foreignKeyJoin || ((...parts)=>{
                 return parts.map((part, index)=>{
                     if(index === 0) return part;
@@ -92,9 +93,21 @@ const DummyEndpoint = function(options, api){
                 }).join('');
             })
             let identifier= this.options.identifier || 'id';
+            let e = this;
             this.options.expandable = function(type, fieldName, fieldValue){
                 // returns falsy *OR* {type, value}
-                const sentinel = keyPartJoiner('a', identifier).substring(1);
+                try{
+                    let endpointNames = e.api.endpoints.map((endpoint)=> endpoint.options.name);
+                    let expanded = fk(fieldName, (name)=>{
+                        return endpointNames.filter((eName)=>{
+                            return eName.indexOf(name) !== -1;
+                        });
+                    });
+                    return expanded || false;
+                }catch(ex){
+                    console.log(ex)
+                }
+                /*const sentinel = keyPartJoiner('a', identifier).substring(1);
                 const index = fieldName.lastIndexOf(sentinel);
                 if(index === -1) return false;
                 if(
@@ -109,7 +122,7 @@ const DummyEndpoint = function(options, api){
                         suffix: fieldName.substring(fieldName.length - identifier.length)
                     };
                 }
-                return false;
+                return false;*/
             };
         }
         if(conf.expandable && typeof conf.expandable === 'function'){
