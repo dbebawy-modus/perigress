@@ -81,18 +81,30 @@ const DummyEndpoint = function(options, api){
     if(this.options.spec && !this.options.name){
         this.options.name = this.options.spec.split('.').shift();
     }
+    function SplitCamelCaseWithAbbreviations(s){
+       return s.split(/([A-Z][a-z]+)/).filter(function(e){return e});
+    }
     let conf = this.config();
     if(!this.options.expandable){
         if(!conf.expandable){
             // use the default
-            let fk = this.options.foreignKey || conf.foreignKey;
+            let identifier= this.options.identifier || 'id';
             let keyPartJoiner = conf.foreignKeyJoin || ((...parts)=>{
                 return parts.map((part, index)=>{
                     if(index === 0) return part;
                     return capitalize(part);
                 }).join('');
-            })
-            let identifier= this.options.identifier || 'id';
+            });
+            let fk = this.options.foreignKey || conf.foreignKey || ((id, getTables)=>{
+                let parts = id.split(/([A-Z][a-z]+)/).filter((e) => e).map((e) => e.toLowerCase());
+                let suffix = parts.pop();
+                if(suffix === identifier){
+                    let remainder = keyPartJoiner.apply(keyPartJoiner, parts);
+                    let tables = getTables(remainder);
+                    return parts;
+                }
+                return false;
+            });
             let e = this;
             this.options.expandable = function(type, fieldName, fieldValue){
                 // returns falsy *OR* {type, value}

@@ -1,6 +1,6 @@
 {
   "name": "@perigress/perigress",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "main": "perigress.js",
   "description": "Contract testing + Data Generation",
   "keywords": [
