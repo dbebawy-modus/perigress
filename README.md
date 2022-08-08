@@ -35,11 +35,13 @@ open "http://localhost:8080/api/user/list"
 You can also launch the server within your code:
 
 ```javascript
-const { API } = require('perigress');
+const { API } = require('@perigress/perigress');
+const Mongonian = require('@perigress/mongonian');
+
 const api = new API({
     subpath : 'verifiers',
     dir: __dirname
-});
+}, new Mongonian());
 api.attach(expressInstance);
 
 ```
