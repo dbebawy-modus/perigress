@@ -16,7 +16,7 @@ const writeInto = (ob, values)=>{
 };
 
 
-const DummyAPI = function(dir, format, options){
+const DummyAPI = function(dir, format, actions){
     this.readyResolve = null;
     this.sift = sift;
     this.ready = new Promise((resolve, rjct)=>{
@@ -27,6 +27,7 @@ const DummyAPI = function(dir, format, options){
     this.errorSpecs = {};
     this.configSpecs = {};
     this.endpoints = [];
+    this.actions = actions || {};
     if(dir){
         this.load(dir, ()=>{
 
@@ -43,6 +44,13 @@ DummyAPI.prototype.getInstance = function(name){
     if(!endpoint) throw new Error('endpoint not found');
     return endpoint;
 }
+
+DummyAPI.prototype.getTypes = function(){
+    return  this.endpoints.map((e)=>{
+        return e.options.name;
+    });
+}
+
 
 DummyAPI.prototype.internal = function(name, operation, options, cb){
     let callback = ks(cb);
@@ -67,6 +75,10 @@ DummyAPI.prototype.internal = function(name, operation, options, cb){
         }
     });
     return callback.return;
+};
+
+DummyAPI.prototype.internalData = function(){
+    return this.endpoints.reduce(((agg, e) => (agg[e.options.name] = e.instances) && agg ), {});
 };
 
 DummyAPI.prototype.log = function(message, level){
@@ -269,7 +281,7 @@ DummyAPI.prototype.scan = function(directory, cb, incomingSpecs, iResults, iErro
         this.log(message, 'debug');
     }
     fs.readdir(directory, (err, result)=>{
-        if(err || (!result) || !result.length) return cb();
+        if(err || (!result) || !result.length) return cb(err);
         let specs = incomingSpecs || [];
         arrays.forEachEmission(result, (item, index, done)=>{
             let itemPath = path.join(directory, item);
