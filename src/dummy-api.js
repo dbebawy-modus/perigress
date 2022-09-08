@@ -226,7 +226,7 @@ DummyAPI.prototype.config = function(dir){
 }
 
 DummyAPI.prototype.load = function(dir, cb){
-    let directory = (dir.subpath && dir.dir)?path.join(dir.dir, dir.subpath):dir;
+    let directory = (dir.subpath)?path.join(dir.dir, dir.subpath):dir;
     let opts = (dir.subpath && dir.dir)?{
         subpath: dir.subpath,
         dir: dir.dir
