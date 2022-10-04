@@ -51,6 +51,7 @@ const capitalize = (s)=>{
 };
 
 const getInstance = (ob, key, cb)=>{
+    if(ob.deleted.indexOf(key) !== -1) return cb(null, null);
     if(ob.instances[key]){
         cb(null, ob.instances[key]);
     }else{
@@ -75,6 +76,7 @@ const DummyEndpoint = function(options, api){
     this.options = options || {};
     this.api = api;
     this.instances = {};
+    this.deleted = [];
     this.endpointOptions = {};
     this.cleanupOptions(this.endpointOptions);
 
