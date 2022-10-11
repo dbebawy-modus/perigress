@@ -27,6 +27,7 @@ const DummyAPI = function(dir, format, actions){
     this.errorSpecs = {};
     this.configSpecs = {};
     this.endpoints = [];
+    if(actions) this.doNotSeedLists = true;
     this.actions = actions || {};
     if(dir){
         this.load(dir, ()=>{
