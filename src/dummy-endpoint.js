@@ -40,8 +40,10 @@ const returnError = (res, error, errorConfig, config)=>{
 };
 
 const returnContent = (res, result, errorConfig, config)=>{
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(result, null, '    '));
+    try{
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(result, null, '    '));
+    }catch(ex){}
 };
 
 const capitalize = (s)=>{

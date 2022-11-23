@@ -100,6 +100,8 @@ Roadmap
 - [x] - Mongoish output format
 - [x] - expose sift for extension
 - [x] - passable page config
+- [ ] - query params passed to subqueries
+- [ ] - lifecycle hooks
 - [ ] - validator assembly
 - [ ] - db test suites
 - [ ] - better error handling
