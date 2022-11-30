@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "async-arrays": "^1.0.1",
-    "body-parser": "^1.19.2",
     "es6-template-strings": "^2.0.1",
     "express": "^4.17.3",
     "extend-interface": "0.0.2",

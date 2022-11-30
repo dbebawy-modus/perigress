@@ -2,7 +2,6 @@ const ks = require('kitchen-sync');
 const Perigress = require('../perigress');
 const path = require('path');
 const express = require('express');
-const bodyParser = require('body-parser');
 const request = require('postman-request');
 
 const port = 8082;
@@ -32,7 +31,7 @@ const fromFn = (opts, format, cb)=>{
 const apiFrom = (opts, format, cb)=>{
 	let callback = ks(cb);
 	const app = express();
-	app.use(bodyParser.json({strict: false}));
+	app.use(express.json({strict: false}));
 	fromFn(opts, format, (err, api)=>{
 		if(err) throw err;
 		api.attach(app, ()=>{

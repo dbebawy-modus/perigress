@@ -2,7 +2,6 @@ const should = require('chai').should();
 const Perigress = require('../perigress');
 const path = require('path');
 //const express = require('express');
-//const bodyParser = require('body-parser');
 //const request = require('postman-request');
 
 describe('perigress', ()=>{
