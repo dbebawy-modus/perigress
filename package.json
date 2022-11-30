@@ -23,12 +23,6 @@
     "type": "git",
     "url": "git://github.com/perigress/perigress.git"
   },
-  "devDependencies": {
-    "chai": "^4.3.6",
-    "joi": "^17.6.0",
-    "mocha": "^9.2.1",
-    "postman-request": "^2.88.1-postman.31"
-  },
   "scripts": {
     "sample-sequelize-create": "./bin/peri generate-tables ./test/paged-wkr-api --sequelize ../sequelize",
     "sample-sql-create": "./bin/peri generate-tables ./test/paged-wkr-api --sql",
@@ -36,22 +30,27 @@
   },
   "dependencies": {
     "async-arrays": "^1.0.1",
-    "body-parser": "^1.19.2",
     "es6-template-strings": "^2.0.1",
     "express": "^4.17.3",
-    "extend-interface": "0.0.2",
-    "joi-to-json": "^2.2.0",
+    "extend-interface": "^0.0.3",
+    "joi-to-json": "^3.1.1",
     "json-schema-faker": "^0.5.0-rcv.42",
     "json-schema2sequelize": "0.0.2",
     "json-schema2sql": "0.0.3",
     "jsonschema": "^1.4.0",
-    "kitchen-sync": "0.0.1",
-    "object-accessor": "0.0.5",
+    "kitchen-sync": "^0.0.2",
+    "object-accessor": "^0.0.5",
     "object-hash": "^3.0.0",
     "seed-random": "^2.2.0",
     "sift": "^16.0.0",
     "to-json-schema": "^0.2.5",
-    "tree-pop": "0.1.2",
+    "tree-pop": "^0.1.5",
     "well-known-regex": "0.0.7"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "joi": "^17.6.0",
+    "mocha": "^10.1.0",
+    "postman-request": "^2.88.1-postman.31"
   }
 }
