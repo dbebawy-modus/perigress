@@ -75,6 +75,7 @@ const DummyEndpoint = function(options, api){
     this.getInstance = (key, cb)=>{
         return getInstance(this, key, cb);
     };
+    this.monitor = ()=>{};
     this.options = options || {};
     this.api = api;
     this.instances = {};
@@ -357,8 +358,9 @@ const getEndpoint = (ob, type)=>{
     return res;
 };
 
-const save = (ob, identifier, type, item, cb)=>{
+const save = ({ob, identifier, type, item}, cb)=>{
     let instance = getEndpoint(ob, type);
+    if(instance.monitor) instance.monitor({ob, identifier, type, item});
     if(!instance) return setTimeout(
         ()=> cb(new Error('No registered type:'+type))
     );
